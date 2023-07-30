@@ -1,8 +1,8 @@
-package error_logger
+package error_handle
 
 import "net/http"
 
-type ErrorLogger struct {
+type ErrorHandle struct {
 	Message string   `json:"message"`
 	Err     string   `json:"error"`
 	Code    int      `json:"code"`
@@ -14,12 +14,12 @@ type Causes struct {
 	Message string `json:"message"`
 }
 
-func (e *ErrorLogger) Error() string {
+func (e *ErrorHandle) Error() string {
 	return e.Message
 }
 
-func NewErrorLogger(message, err string, code int, causes []Causes) *ErrorLogger {
-	return &ErrorLogger{
+func NewErrorHandle(message, err string, code int, causes []Causes) *ErrorHandle {
+	return &ErrorHandle{
 		Message: message,
 		Err:     err,
 		Code:    code,
@@ -27,16 +27,16 @@ func NewErrorLogger(message, err string, code int, causes []Causes) *ErrorLogger
 	}
 }
 
-func NewBadRequestError(message string) *ErrorLogger {
-	return &ErrorLogger{
+func NewBadRequestError(message string) *ErrorHandle {
+	return &ErrorHandle{
 		Message: message,
 		Err:     "bad_request",
 		Code:    http.StatusBadRequest,
 	}
 }
 
-func NewBadRequestValidationError(message string, causes []Causes) *ErrorLogger {
-	return &ErrorLogger{
+func NewBadRequestValidationError(message string, causes []Causes) *ErrorHandle {
+	return &ErrorHandle{
 		Message: message,
 		Err:     "bad_request",
 		Code:    http.StatusBadRequest,
@@ -44,24 +44,24 @@ func NewBadRequestValidationError(message string, causes []Causes) *ErrorLogger 
 	}
 }
 
-func NewInternalServerError(message string) *ErrorLogger {
-	return &ErrorLogger{
+func NewInternalServerError(message string) *ErrorHandle {
+	return &ErrorHandle{
 		Message: message,
 		Err:     "internal_server_error",
 		Code:    http.StatusInternalServerError,
 	}
 }
 
-func NewNotFoundError(message string) *ErrorLogger {
-	return &ErrorLogger{
+func NewNotFoundError(message string) *ErrorHandle {
+	return &ErrorHandle{
 		Message: message,
 		Err:     "not_found",
 		Code:    http.StatusNotFound,
 	}
 }
 
-func NewForbiddenError(message string) *ErrorLogger {
-	return &ErrorLogger{
+func NewForbiddenError(message string) *ErrorHandle {
+	return &ErrorHandle{
 		Message: message,
 		Err:     "forbidden",
 		Code:    http.StatusForbidden,

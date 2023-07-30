@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/MogLuiz/go-person-api/src/configuration/error_logger"
+	"github.com/MogLuiz/go-person-api/src/configuration/error_handle"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
@@ -29,18 +29,18 @@ func init() {
 
 func ValidateUserError(
 	validation_err error,
-) *error_logger.ErrorLogger {
+) *error_handle.ErrorHandle {
 
 	var jsonErr *json.UnmarshalTypeError
 	var jsonValidationError validator.ValidationErrors
 
 	if errors.As(validation_err, &jsonErr) {
-		return error_logger.NewBadRequestError("Invalid field type")
+		return error_handle.NewBadRequestError("Invalid field type")
 	} else if errors.As(validation_err, &jsonValidationError) {
-		errorsCauses := []error_logger.Causes{}
+		errorsCauses := []error_handle.Causes{}
 
 		for _, e := range validation_err.(validator.ValidationErrors) {
-			cause := error_logger.Causes{
+			cause := error_handle.Causes{
 				Message: e.Translate(translate),
 				Field:   e.Field(),
 			}
@@ -48,8 +48,8 @@ func ValidateUserError(
 			errorsCauses = append(errorsCauses, cause)
 		}
 
-		return error_logger.NewBadRequestValidationError("Some fields are invalid", errorsCauses)
+		return error_handle.NewBadRequestValidationError("Some fields are invalid", errorsCauses)
 	} else {
-		return error_logger.NewBadRequestError("Error trying to convert fields")
+		return error_handle.NewBadRequestError("Error trying to convert fields")
 	}
 }
