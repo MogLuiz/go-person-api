@@ -5,7 +5,7 @@ import (
 	"github.com/MogLuiz/go-person-api/src/configuration/logger"
 )
 
-func (ud *UserDomain) UpdateUser(string) *error_handle.ErrorHandle {
+func (ud *userDomain) UpdateUser(string) *error_handle.ErrorHandle {
 	logger.Info("Init updateUser model", logger.AddJourneyTag(logger.UpdateUserJourney))
 
 	return nil
