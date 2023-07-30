@@ -17,6 +17,9 @@ var (
 
 const (
 	CreateUserJourney = "createUser"
+	UpdateUserJourney = "updateUser"
+	FindUserJourney   = "findUser"
+	DeleteUserJourney = "deleteUser"
 )
 
 func init() {
