@@ -7,6 +7,7 @@ import (
 	"github.com/MogLuiz/go-person-api/src/configuration/validation"
 	"github.com/MogLuiz/go-person-api/src/controller/model/request"
 	"github.com/MogLuiz/go-person-api/src/model"
+	"github.com/MogLuiz/go-person-api/src/model/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,7 +25,8 @@ func CreateUser(c *gin.Context) {
 
 	userDomain := model.NewUserDomain(userRequest.Email, userRequest.Password, userRequest.Name, userRequest.Age)
 
-	err := userDomain.CreateUser()
+	service := services.NewUserDomainService()
+	err := service.CreateUser(userDomain)
 	if err != nil {
 		logger.Error("Error trying to create user", err, logger.AddJourneyTag(logger.CreateUserJourney))
 		c.JSON(err.Code, err)

@@ -1,17 +1,18 @@
-package model
+package services
 
 import (
 	"fmt"
 
 	"github.com/MogLuiz/go-person-api/src/configuration/error_handle"
 	"github.com/MogLuiz/go-person-api/src/configuration/logger"
+	"github.com/MogLuiz/go-person-api/src/model"
 )
 
-func (ud *userDomain) CreateUser() *error_handle.ErrorHandle {
+func (ud *userDomainService) CreateUser(userDomain model.UserDomainInterface) *error_handle.ErrorHandle {
 	logger.Info("Init createUser model", logger.AddJourneyTag(logger.CreateUserJourney))
 
-	ud.EncryptPassword()
+	userDomain.EncryptPassword()
 
-	fmt.Println(ud)
+	fmt.Println(userDomain.GetPassword())
 	return nil
 }
