@@ -1,6 +1,11 @@
 package model
 
-import "github.com/MogLuiz/go-person-api/src/configuration/error_handle"
+import (
+	"crypto/md5"
+	"encoding/hex"
+
+	"github.com/MogLuiz/go-person-api/src/configuration/error_handle"
+)
 
 type UserDomain struct {
 	Email    string
@@ -9,9 +14,16 @@ type UserDomain struct {
 	Age      int8
 }
 
+func (ud *UserDomain) EncryptPassword() {
+	hash := md5.New()
+	defer hash.Reset()
+	hash.Write([]byte(ud.Password))
+	ud.Password = hex.EncodeToString(hash.Sum(nil))
+}
+
 type UserDomainInterface interface {
-	CreateUser(UserDomain) *error_handle.ErrorHandle
-	UpdateUser(string, UserDomain) *error_handle.ErrorHandle
+	CreateUser() *error_handle.ErrorHandle
+	UpdateUser(string) *error_handle.ErrorHandle
 	FindUser(string) (*UserDomain, *error_handle.ErrorHandle)
 	DeleteUser(string) *error_handle.ErrorHandle
 }

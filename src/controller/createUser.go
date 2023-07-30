@@ -11,11 +11,11 @@ import (
 )
 
 func CreateUser(c *gin.Context) {
-	logger.Info("Init CreateUser controller", logger.AddJourneyTag("createUser"))
+	logger.Info("Init CreateUser controller", logger.AddJourneyTag(logger.CreateUserJourney))
 	var userRequest request.UserRequest
 
 	if err := c.ShouldBindJSON(&userRequest); err != nil {
-		logger.Error("Error trying to validate user info", err, logger.AddJourneyTag("createUser"))
+		logger.Error("Error trying to validate user info", err, logger.AddJourneyTag(logger.CreateUserJourney))
 		error := validation.ValidateUserError(err)
 
 		c.JSON(error.Code, error)
@@ -29,6 +29,6 @@ func CreateUser(c *gin.Context) {
 		Age:   userRequest.Age,
 	}
 
-	logger.Info("user created successfully", logger.AddJourneyTag("createUser"))
+	logger.Info("user created successfully", logger.AddJourneyTag(logger.CreateUserJourney))
 	c.JSON(http.StatusOK, response)
 }

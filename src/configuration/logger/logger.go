@@ -15,6 +15,10 @@ var (
 	LOG_LEVEL  = "LOG_LEVEL"
 )
 
+const (
+	CreateUserJourney = "createUser"
+)
+
 func init() {
 	logConfig := zap.Config{
 		OutputPaths: []string{getOutputLogs()},
