@@ -65,3 +65,7 @@ func getLevelLogs() zapcore.Level {
 		return zapcore.InfoLevel
 	}
 }
+
+func AddJourneyTag(journey string) zap.Field {
+	return zap.String("journey", journey)
+}
