@@ -7,6 +7,15 @@ import (
 	"github.com/MogLuiz/go-person-api/src/configuration/error_handle"
 )
 
+func NewUserDomain(email, password, name string, age int8) UserDomainInterface {
+	return &UserDomain{
+		Email:    email,
+		Password: password,
+		Name:     name,
+		Age:      age,
+	}
+}
+
 type UserDomain struct {
 	Email    string
 	Password string
