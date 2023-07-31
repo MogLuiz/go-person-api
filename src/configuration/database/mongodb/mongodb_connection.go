@@ -2,23 +2,32 @@ package mongodb
 
 import (
 	"context"
+	"os"
 
-	"github.com/MogLuiz/go-person-api/src/configuration/logger"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func InitConnection() {
-	ctx := context.Background()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+var (
+	MONGODB_URL     = "MONGODB_URL"
+	MONGODB_USER_DB = "MONGODB_USER_DB"
+)
+
+func NewMongoDBConnection(ctx context.Context) (*mongo.Database, error) {
+	mongodb_uri := os.Getenv(MONGODB_URL)
+	mongodb_database := os.Getenv(MONGODB_USER_DB)
+
+	client, err := mongo.Connect(
+		ctx,
+		options.Client().ApplyURI(mongodb_uri))
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	logger.Info("Connected to MongoDB!")
+	return client.Database(mongodb_database), nil
 }
