@@ -7,6 +7,8 @@ import (
 	"github.com/MogLuiz/go-person-api/src/configuration/error_handle"
 	"github.com/MogLuiz/go-person-api/src/configuration/logger"
 	"github.com/MogLuiz/go-person-api/src/model"
+	"github.com/MogLuiz/go-person-api/src/model/repository/entity/converter"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -18,11 +20,7 @@ func (ur *userRepository) CreateUser(userDomain model.UserDomainInterface) (mode
 
 	collection := ur.databaseConnection.Collection(os.Getenv(MOGODB_USER_COLLECTION))
 
-	value, err := userDomain.GetJSONValue()
-	if err != nil {
-		logger.Error("Error on get json value", err, logger.AddJourneyTag(logger.CreateUserJourney))
-		return nil, error_handle.NewInternalServerError(err.Error())
-	}
+	value := converter.ConvertDomainToEntity(userDomain)
 
 	result, err := collection.InsertOne(context.Background(), value)
 	if err != nil {
@@ -30,7 +28,7 @@ func (ur *userRepository) CreateUser(userDomain model.UserDomainInterface) (mode
 		return nil, error_handle.NewInternalServerError(err.Error())
 	}
 
-	userDomain.SetID(result.InsertedID.(string))
+	value.ID = result.InsertedID.(primitive.ObjectID)
 
-	return userDomain, nil
+	return converter.ConvertEntityToDomain(value), nil
 }
