@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/MogLuiz/go-person-api/src/configuration/database/mongodb"
 	"github.com/MogLuiz/go-person-api/src/configuration/logger"
 	"github.com/MogLuiz/go-person-api/src/controller"
 	"github.com/MogLuiz/go-person-api/src/controller/routes"
@@ -19,6 +20,8 @@ func main() {
 	if err != nil {
 		fmt.Println("Error loading .env file")
 	}
+
+	mongodb.InitConnection()
 
 	service := services.NewUserDomainService()
 	userController := controller.NewUserControllerInterface(service)
