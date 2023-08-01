@@ -7,7 +7,7 @@ import (
 )
 
 func (ud *userDomainService) CreateUser(userDomain model.UserDomainInterface) (model.UserDomainInterface, *error_handle.ErrorHandle) {
-	logger.Info("Init createUser model", logger.AddJourneyTag(logger.CreateUserJourney))
+	logger.Info("Init createUser service", logger.AddJourneyTag(logger.CreateUserJourney))
 
 	userDomain.EncryptPassword()
 

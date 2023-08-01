@@ -16,10 +16,11 @@ var (
 )
 
 const (
-	CreateUserJourney = "createUser"
-	UpdateUserJourney = "updateUser"
-	FindUserJourney   = "findUser"
-	DeleteUserJourney = "deleteUser"
+	CreateUserJourney      = "createUser"
+	UpdateUserJourney      = "updateUser"
+	FindUserByIDJourney    = "findUserByID"
+	FindUserByEmailJourney = "findUserByEmail"
+	DeleteUserJourney      = "deleteUser"
 )
 
 func init() {
