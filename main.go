@@ -7,10 +7,7 @@ import (
 
 	"github.com/MogLuiz/go-person-api/src/configuration/database/mongodb"
 	"github.com/MogLuiz/go-person-api/src/configuration/logger"
-	"github.com/MogLuiz/go-person-api/src/controller"
 	"github.com/MogLuiz/go-person-api/src/controller/routes"
-	"github.com/MogLuiz/go-person-api/src/model/repository"
-	"github.com/MogLuiz/go-person-api/src/model/services"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -29,9 +26,7 @@ func main() {
 		return
 	}
 
-	repository := repository.NewUserRepository(database)
-	service := services.NewUserDomainService(repository)
-	userController := controller.NewUserControllerInterface(service)
+	userController := initDependencies(database)
 
 	router := gin.Default()
 	routes.InitRoutes(&router.RouterGroup, userController)
