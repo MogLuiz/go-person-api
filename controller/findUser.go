@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"net/mail"
 
 	"github.com/MogLuiz/go-person-api/configuration/error_handle"
 	"github.com/MogLuiz/go-person-api/configuration/logger"
@@ -34,4 +35,26 @@ func (uc *userControllerInterface) FindUserByID(c *gin.Context) {
 	c.JSON(http.StatusOK, view.ConvertDomainToResponse(userDomain))
 }
 
-func (uc *userControllerInterface) FindUserByEmail(c *gin.Context) {}
+func (uc *userControllerInterface) FindUserByEmail(c *gin.Context) {
+	logger.Info("Init FindUserByEmail controller", logger.AddJourneyTag(logger.FindUserByEmailJourney))
+
+	userEmail := c.Param("userEmail")
+
+	if _, err := mail.ParseAddress(userEmail); err != nil {
+		errorMessage := error_handle.NewBadRequestError("userEmail is not a valid email")
+		logger.Error("Error trying to validate userEmail", err, logger.AddJourneyTag(logger.FindUserByEmailJourney))
+
+		c.JSON(errorMessage.Code, errorMessage)
+		return
+	}
+
+	userDomain, err := uc.service.FindUserByEmail(userEmail)
+	if err != nil {
+		logger.Error("Error trying to call FindUserByEmail service", err, logger.AddJourneyTag(logger.FindUserByEmailJourney))
+		c.JSON(err.Code, err)
+		return
+	}
+
+	logger.Info("FindUserByEmail controller executed successfully", logger.AddGenericTag("userEmail", userDomain.GetEmail()), logger.AddJourneyTag(logger.FindUserByEmailJourney))
+	c.JSON(http.StatusOK, view.ConvertDomainToResponse(userDomain))
+}
