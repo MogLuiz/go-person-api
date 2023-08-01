@@ -30,5 +30,6 @@ func (ur *userRepository) CreateUser(userDomain model.UserDomainInterface) (mode
 
 	value.ID = result.InsertedID.(primitive.ObjectID)
 
+	logger.Info("createdUser repository executed successfully", logger.AddGenericTag("userID", value.ID.Hex()), logger.AddJourneyTag(logger.CreateUserJourney))
 	return converter.ConvertEntityToDomain(value), nil
 }

@@ -76,3 +76,7 @@ func getLevelLogs() zapcore.Level {
 func AddJourneyTag(journey string) zap.Field {
 	return zap.String("journey", journey)
 }
+
+func AddGenericTag(key string, value string) zap.Field {
+	return zap.String(key, value)
+}
