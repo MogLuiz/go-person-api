@@ -4,10 +4,10 @@ import (
 	"context"
 	"os"
 
-	"github.com/MogLuiz/go-person-api/src/configuration/error_handle"
-	"github.com/MogLuiz/go-person-api/src/configuration/logger"
-	"github.com/MogLuiz/go-person-api/src/model"
-	"github.com/MogLuiz/go-person-api/src/model/repository/entity/converter"
+	"github.com/MogLuiz/go-person-api/configuration/error_handle"
+	"github.com/MogLuiz/go-person-api/configuration/logger"
+	"github.com/MogLuiz/go-person-api/model"
+	"github.com/MogLuiz/go-person-api/model/repository/entity/converter"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

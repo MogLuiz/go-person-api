@@ -1,9 +1,9 @@
 package services
 
 import (
-	"github.com/MogLuiz/go-person-api/src/configuration/error_handle"
-	"github.com/MogLuiz/go-person-api/src/model"
-	"github.com/MogLuiz/go-person-api/src/model/repository"
+	"github.com/MogLuiz/go-person-api/configuration/error_handle"
+	"github.com/MogLuiz/go-person-api/model"
+	"github.com/MogLuiz/go-person-api/model/repository"
 )
 
 func NewUserDomainService(userRepository repository.UserRepository) UserDomainService {

@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/MogLuiz/go-person-api/src/configuration/error_handle"
-	"github.com/MogLuiz/go-person-api/src/configuration/logger"
+	"github.com/MogLuiz/go-person-api/configuration/error_handle"
+	"github.com/MogLuiz/go-person-api/configuration/logger"
 )
 
 func (ud *userDomainService) DeleteUser(string) *error_handle.ErrorHandle {

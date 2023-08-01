@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/MogLuiz/go-person-api/src/controller"
+	"github.com/MogLuiz/go-person-api/controller"
 	"github.com/gin-gonic/gin"
 )
 

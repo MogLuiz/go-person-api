@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/MogLuiz/go-person-api/src/configuration/error_handle"
-	"github.com/MogLuiz/go-person-api/src/model"
+	"github.com/MogLuiz/go-person-api/configuration/error_handle"
+	"github.com/MogLuiz/go-person-api/model"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

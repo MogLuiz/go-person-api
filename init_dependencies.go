@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/MogLuiz/go-person-api/src/controller"
-	"github.com/MogLuiz/go-person-api/src/model/repository"
-	"github.com/MogLuiz/go-person-api/src/model/services"
+	"github.com/MogLuiz/go-person-api/controller"
+	"github.com/MogLuiz/go-person-api/model/repository"
+	"github.com/MogLuiz/go-person-api/model/services"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

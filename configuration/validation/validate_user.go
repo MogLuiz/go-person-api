@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/MogLuiz/go-person-api/src/configuration/error_handle"
+	"github.com/MogLuiz/go-person-api/configuration/error_handle"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"

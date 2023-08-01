@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/MogLuiz/go-person-api/src/model/services"
+	"github.com/MogLuiz/go-person-api/model/services"
 	"github.com/gin-gonic/gin"
 )
 

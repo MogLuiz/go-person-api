@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/MogLuiz/go-person-api/src/configuration/database/mongodb"
-	"github.com/MogLuiz/go-person-api/src/configuration/logger"
-	"github.com/MogLuiz/go-person-api/src/controller/routes"
+	"github.com/MogLuiz/go-person-api/configuration/database/mongodb"
+	"github.com/MogLuiz/go-person-api/configuration/logger"
+	"github.com/MogLuiz/go-person-api/controller/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )

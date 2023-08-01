@@ -1,8 +1,8 @@
 package converter
 
 import (
-	"github.com/MogLuiz/go-person-api/src/model"
-	"github.com/MogLuiz/go-person-api/src/model/repository/entity"
+	"github.com/MogLuiz/go-person-api/model"
+	"github.com/MogLuiz/go-person-api/model/repository/entity"
 )
 
 func ConvertEntityToDomain(entity *entity.UserEntity) model.UserDomainInterface {

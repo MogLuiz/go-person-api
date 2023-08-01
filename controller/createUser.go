@@ -3,11 +3,11 @@ package controller
 import (
 	"net/http"
 
-	"github.com/MogLuiz/go-person-api/src/configuration/logger"
-	"github.com/MogLuiz/go-person-api/src/configuration/validation"
-	"github.com/MogLuiz/go-person-api/src/controller/model/request"
-	"github.com/MogLuiz/go-person-api/src/model"
-	"github.com/MogLuiz/go-person-api/src/view"
+	"github.com/MogLuiz/go-person-api/configuration/logger"
+	"github.com/MogLuiz/go-person-api/configuration/validation"
+	"github.com/MogLuiz/go-person-api/controller/model/request"
+	"github.com/MogLuiz/go-person-api/model"
+	"github.com/MogLuiz/go-person-api/view"
 	"github.com/gin-gonic/gin"
 )
 
