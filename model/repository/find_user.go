@@ -42,3 +42,31 @@ func (ur *userRepository) FindUserByEmail(email string) (model.UserDomainInterfa
 
 	return converter.ConvertEntityToDomain(userEntity), nil
 }
+
+func (ur *userRepository) FindUserByID(id string) (model.UserDomainInterface, *error_handle.ErrorHandle) {
+	logger.Info("Init findUserByID repository", logger.AddJourneyTag(logger.UpdateUserJourney))
+
+	collection := ur.databaseConnection.Collection(os.Getenv(MOGODB_USER_COLLECTION))
+
+	userEntity := &entity.UserEntity{}
+
+	filter := bson.D{{Key: "_id", Value: id}}
+	err := collection.FindOne(context.Background(), filter).Decode(userEntity)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			errorMessage := fmt.Sprintf("User with ID %s not found", id)
+			logger.Error(errorMessage, err, logger.AddJourneyTag(logger.UpdateUserJourney))
+			return nil, error_handle.NewNotFoundError(errorMessage)
+		}
+
+		errorMessage := fmt.Sprintf("Error trying to find user with ID %s", id)
+		logger.Error(errorMessage, err, logger.AddJourneyTag(logger.UpdateUserJourney))
+		return nil, error_handle.NewInternalServerError(errorMessage)
+	}
+
+	logger.Info("findUserByID repository executed successfully",
+		logger.AddGenericTag("userID", userEntity.ID.Hex()),
+		logger.AddJourneyTag(logger.UpdateUserJourney))
+
+	return converter.ConvertEntityToDomain(userEntity), nil
+}
