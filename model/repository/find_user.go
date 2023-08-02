@@ -11,6 +11,7 @@ import (
 	"github.com/MogLuiz/go-person-api/model/repository/entity"
 	"github.com/MogLuiz/go-person-api/model/repository/entity/converter"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -50,7 +51,8 @@ func (ur *userRepository) FindUserByID(id string) (model.UserDomainInterface, *e
 
 	userEntity := &entity.UserEntity{}
 
-	filter := bson.D{{Key: "_id", Value: id}}
+	objectID, _ := primitive.ObjectIDFromHex(id)
+	filter := bson.D{{Key: "_id", Value: objectID}}
 	err := collection.FindOne(context.Background(), filter).Decode(userEntity)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {

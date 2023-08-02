@@ -23,6 +23,11 @@ func (ud *userDomainService) FindUserByEmail(email string) (model.UserDomainInte
 
 	userDomainRepository, err := ud.repository.FindUserByEmail(email)
 	if err != nil {
+		if err.Code == 404 {
+			logger.Error("Error 404 when findUserByEmail repository is called", err, logger.AddJourneyTag(logger.FindUserByEmailJourney))
+			return nil, error_handle.NewNotFoundError(err.Error())
+		}
+
 		logger.Error("Error trying to call findUserByEmail repository", err, logger.AddJourneyTag(logger.FindUserByEmailJourney))
 		return nil, error_handle.NewInternalServerError(err.Error())
 	}
