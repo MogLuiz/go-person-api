@@ -1,6 +1,8 @@
 package services
 
 import (
+	"net/http"
+
 	"github.com/MogLuiz/go-person-api/configuration/error_handle"
 	"github.com/MogLuiz/go-person-api/configuration/logger"
 	"github.com/MogLuiz/go-person-api/model"
@@ -11,6 +13,11 @@ func (ud *userDomainService) FindUserByID(id string) (model.UserDomainInterface,
 
 	userDomainRepository, err := ud.repository.FindUserByID(id)
 	if err != nil {
+		if err.Code == http.StatusNotFound {
+			logger.Error("Error 404 when findUserByID repository is called", err, logger.AddJourneyTag(logger.FindUserByIDJourney))
+			return nil, error_handle.NewNotFoundError(err.Error())
+		}
+
 		logger.Error("Error trying to call findUserByID repository", err, logger.AddJourneyTag(logger.FindUserByIDJourney))
 		return nil, error_handle.NewInternalServerError(err.Error())
 	}
@@ -23,7 +30,7 @@ func (ud *userDomainService) FindUserByEmail(email string) (model.UserDomainInte
 
 	userDomainRepository, err := ud.repository.FindUserByEmail(email)
 	if err != nil {
-		if err.Code == 404 {
+		if err.Code == http.StatusNotFound {
 			logger.Error("Error 404 when findUserByEmail repository is called", err, logger.AddJourneyTag(logger.FindUserByEmailJourney))
 			return nil, error_handle.NewNotFoundError(err.Error())
 		}
