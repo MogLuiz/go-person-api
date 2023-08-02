@@ -14,8 +14,7 @@ func (ud *userDomainService) FindUserByID(id string) (model.UserDomainInterface,
 	userDomainRepository, err := ud.repository.FindUserByID(id)
 	if err != nil {
 		if err.Code == http.StatusNotFound {
-			logger.Error("Error 404 when findUserByID repository is called", err, logger.AddJourneyTag(logger.FindUserByIDJourney))
-			return nil, error_handle.NewNotFoundError(err.Error())
+			return nil, err
 		}
 
 		logger.Error("Error trying to call findUserByID repository", err, logger.AddJourneyTag(logger.FindUserByIDJourney))
@@ -31,8 +30,7 @@ func (ud *userDomainService) FindUserByEmail(email string) (model.UserDomainInte
 	userDomainRepository, err := ud.repository.FindUserByEmail(email)
 	if err != nil {
 		if err.Code == http.StatusNotFound {
-			logger.Error("Error 404 when findUserByEmail repository is called", err, logger.AddJourneyTag(logger.FindUserByEmailJourney))
-			return nil, error_handle.NewNotFoundError(err.Error())
+			return nil, err
 		}
 
 		logger.Error("Error trying to call findUserByEmail repository", err, logger.AddJourneyTag(logger.FindUserByEmailJourney))

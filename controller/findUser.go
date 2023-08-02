@@ -27,7 +27,6 @@ func (uc *userControllerInterface) FindUserByID(c *gin.Context) {
 	userDomain, err := uc.service.FindUserByID(userID)
 	if err != nil {
 		if err.Code == http.StatusNotFound {
-			logger.Error("Error 404 when FindUserByID service is called", err, logger.AddJourneyTag(logger.FindUserByIDJourney))
 			c.JSON(err.Code, err)
 			return
 		}
@@ -57,7 +56,6 @@ func (uc *userControllerInterface) FindUserByEmail(c *gin.Context) {
 	userDomain, err := uc.service.FindUserByEmail(userEmail)
 	if err != nil {
 		if err.Code == http.StatusNotFound {
-			logger.Error("Error 404 when FindUserByEmail service is called", err, logger.AddJourneyTag(logger.FindUserByEmailJourney))
 			c.JSON(err.Code, err)
 			return
 		}
