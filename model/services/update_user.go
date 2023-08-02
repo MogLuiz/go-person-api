@@ -9,5 +9,12 @@ import (
 func (ud *userDomainService) UpdateUser(userID string, userDomain model.UserDomainInterface) *error_handle.ErrorHandle {
 	logger.Info("Init updateUser model", logger.AddJourneyTag(logger.UpdateUserJourney))
 
+	err := ud.repository.UpdateUser(userDomain)
+	if err != nil {
+		logger.Error("Error trying to call updateUser repository", err, logger.AddJourneyTag(logger.UpdateUserJourney))
+		return error_handle.NewInternalServerError(err.Error())
+	}
+
+	logger.Info("updateUser service executed successfully", logger.AddGenericTag("userID", userID), logger.AddJourneyTag(logger.UpdateUserJourney))
 	return nil
 }
