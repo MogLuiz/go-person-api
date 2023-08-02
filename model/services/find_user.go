@@ -18,8 +18,14 @@ func (ud *userDomainService) FindUserByID(id string) (model.UserDomainInterface,
 	return userDomainRepository, nil
 }
 
-func (ud *userDomainService) FindUserByEmail(id string) (model.UserDomainInterface, *error_handle.ErrorHandle) {
+func (ud *userDomainService) FindUserByEmail(email string) (model.UserDomainInterface, *error_handle.ErrorHandle) {
 	logger.Info("Init findUserByEmail service", logger.AddJourneyTag(logger.FindUserByEmailJourney))
 
-	return nil, nil
+	userDomainRepository, err := ud.repository.FindUserByEmail(email)
+	if err != nil {
+		logger.Error("Error trying to call findUserByEmail repository", err, logger.AddJourneyTag(logger.FindUserByEmailJourney))
+		return nil, error_handle.NewInternalServerError(err.Error())
+	}
+
+	return userDomainRepository, nil
 }
