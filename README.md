@@ -12,7 +12,9 @@ Go Person API
 
 ## :dart: Arquitetura atual do projeto
 
-<img width="1160" alt="Captura de Tela 2023-07-31 às 22 40 15" src="https://github.com/MogLuiz/user-clean-arch/assets/58401291/ac21bb0b-0206-4334-b45e-3e67f2ef326e">
+<p align="center">
+   <img  width="868" alt="Fluxo de arquitetura do projeto" src="https://github.com/MogLuiz/go-person-api/assets/58401291/d6667ab1-13d5-          431f-8542-c503f3ea33a1">
+</p>
 
 
 ## :wrench: Stack
