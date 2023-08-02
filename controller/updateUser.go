@@ -34,6 +34,14 @@ func (uc *userControllerInterface) UpdateUser(c *gin.Context) {
 		return
 	}
 
+	if strings.TrimSpace(userRequest.Name) == "" && userRequest.Age == 0 {
+		errorMessage := error_handle.NewBadRequestError("at least one field must be filled")
+		logger.Error("Error trying to validate user info", errorMessage, logger.AddJourneyTag(logger.UpdateUserJourney))
+
+		c.JSON(errorMessage.Code, errorMessage)
+		return
+	}
+
 	userDomain := model.NewUserUpdateDomain(userRequest.Name, userRequest.Age)
 	err := uc.service.UpdateUser(userID, userDomain)
 	if err != nil {

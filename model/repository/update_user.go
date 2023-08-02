@@ -17,9 +17,10 @@ func (ur *userRepository) UpdateUser(userID string, userDomain model.UserDomainI
 	collection := ur.databaseConnection.Collection(os.Getenv(MOGODB_USER_COLLECTION))
 
 	value := converter.ConvertDomainToEntity(userDomain)
-	filter := bson.M{"_id": userID}
+	filter := bson.D{{Key: "_id", Value: userID}}
+	update := bson.D{{Key: "$set", Value: value}}
 
-	_, err := collection.UpdateOne(context.Background(), filter, value)
+	_, err := collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		logger.Error("Error on update user in database", err, logger.AddJourneyTag(logger.UpdateUserJourney))
 		return error_handle.NewInternalServerError(err.Error())
