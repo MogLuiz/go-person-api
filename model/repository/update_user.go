@@ -9,6 +9,7 @@ import (
 	"github.com/MogLuiz/go-person-api/model"
 	"github.com/MogLuiz/go-person-api/model/repository/entity/converter"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func (ur *userRepository) UpdateUser(userID string, userDomain model.UserDomainInterface) *error_handle.ErrorHandle {
@@ -17,7 +18,9 @@ func (ur *userRepository) UpdateUser(userID string, userDomain model.UserDomainI
 	collection := ur.databaseConnection.Collection(os.Getenv(MOGODB_USER_COLLECTION))
 
 	value := converter.ConvertDomainToEntity(userDomain)
-	filter := bson.D{{Key: "_id", Value: userID}}
+	userIDHex, _ := primitive.ObjectIDFromHex(userID)
+
+	filter := bson.D{{Key: "_id", Value: userIDHex}}
 	update := bson.D{{Key: "$set", Value: value}}
 
 	_, err := collection.UpdateOne(context.Background(), filter, update)
