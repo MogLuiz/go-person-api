@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/MogLuiz/go-person-api/configuration/error_handle"
@@ -21,4 +22,13 @@ func (uc *userControllerInterface) DeleteUser(c *gin.Context) {
 		return
 	}
 
+	err := uc.service.DeleteUser(userID)
+	if err != nil {
+		logger.Error("Error trying to call deleteUser service", err, logger.AddJourneyTag(logger.DeleteUserJourney))
+		c.JSON(err.Code, err)
+		return
+	}
+
+	logger.Info("deleteUser controller executed successfully", logger.AddGenericTag("userID", userID), logger.AddJourneyTag(logger.DeleteUserJourney))
+	c.Status(http.StatusOK)
 }
