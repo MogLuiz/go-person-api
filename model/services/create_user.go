@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/MogLuiz/go-person-api/configuration/error_handle"
 	"github.com/MogLuiz/go-person-api/configuration/logger"
 	"github.com/MogLuiz/go-person-api/model"
@@ -8,6 +10,12 @@ import (
 
 func (ud *userDomainService) CreateUser(userDomain model.UserDomainInterface) (model.UserDomainInterface, *error_handle.ErrorHandle) {
 	logger.Info("Init createUser service", logger.AddJourneyTag(logger.CreateUserJourney))
+
+	user, err := ud.FindUserByEmail(userDomain.GetEmail())
+	if user != nil && err == nil {
+		logger.Error("Error trying to create user, email already exists", errors.New("email already exists"), logger.AddJourneyTag(logger.CreateUserJourney))
+		return nil, error_handle.NewBadRequestError("email already registered in another account")
+	}
 
 	userDomain.EncryptPassword()
 
