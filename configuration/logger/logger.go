@@ -21,6 +21,7 @@ const (
 	FindUserByIDJourney    = "findUserByID"
 	FindUserByEmailJourney = "findUserByEmail"
 	DeleteUserJourney      = "deleteUser"
+	LoginUserJourney       = "loginUser"
 )
 
 func init() {
