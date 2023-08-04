@@ -41,7 +41,7 @@ func (ur *userRepository) FindUserByEmail(email string) (model.UserDomainInterfa
 		logger.AddGenericTag("email", userEntity.Email),
 		logger.AddJourneyTag(logger.FindUserByEmailJourney))
 
-	return converter.ConvertEntityToDomain(userEntity), nil
+	return converter.ConvertEntityToDomain(*userEntity), nil
 }
 
 func (ur *userRepository) FindUserByID(id string) (model.UserDomainInterface, *error_handle.ErrorHandle) {
@@ -70,7 +70,7 @@ func (ur *userRepository) FindUserByID(id string) (model.UserDomainInterface, *e
 		logger.AddGenericTag("userID", userEntity.ID.Hex()),
 		logger.AddJourneyTag(logger.FindUserByIDJourney))
 
-	return converter.ConvertEntityToDomain(userEntity), nil
+	return converter.ConvertEntityToDomain(*userEntity), nil
 }
 
 func (ur *userRepository) FindUserByEmailAndPassword(email, password string) (model.UserDomainInterface, *error_handle.ErrorHandle) {
@@ -87,9 +87,9 @@ func (ur *userRepository) FindUserByEmailAndPassword(email, password string) (mo
 	err := collection.FindOne(context.Background(), filter).Decode(userEntity)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			errorMessage := "User not found with this email and password"
+			errorMessage := "User or password is invalid"
 			logger.Error(errorMessage, err, logger.AddJourneyTag(logger.LoginUserJourney))
-			return nil, error_handle.NewNotFoundError(errorMessage)
+			return nil, error_handle.NewForbiddenError(errorMessage)
 		}
 
 		errorMessage := "Error trying to find user by email and password"
@@ -102,5 +102,5 @@ func (ur *userRepository) FindUserByEmailAndPassword(email, password string) (mo
 		logger.AddGenericTag("email", userEntity.Email),
 		logger.AddJourneyTag(logger.LoginUserJourney))
 
-	return converter.ConvertEntityToDomain(userEntity), nil
+	return converter.ConvertEntityToDomain(*userEntity), nil
 }

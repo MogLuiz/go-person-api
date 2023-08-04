@@ -12,7 +12,8 @@ func (ud *userDomainService) LoginUser(userDomain model.UserDomainInterface) (mo
 	userDomain.EncryptPassword()
 
 	user, err := ud.findUserByEmailAndPassword(userDomain.GetEmail(), userDomain.GetPassword())
-	if err == nil {
+	if err != nil {
+		logger.Error("Error trying to call findUserByEmailAndPassword service", err, logger.AddJourneyTag(logger.LoginUserJourney))
 		return nil, err
 	}
 
