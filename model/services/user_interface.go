@@ -22,4 +22,5 @@ type UserDomainService interface {
 	FindUserByID(id string) (model.UserDomainInterface, *error_handle.ErrorHandle)
 	FindUserByEmail(email string) (model.UserDomainInterface, *error_handle.ErrorHandle)
 	DeleteUser(userID string) *error_handle.ErrorHandle
+	LoginUser(userDomain model.UserDomainInterface) (model.UserDomainInterface, *error_handle.ErrorHandle)
 }

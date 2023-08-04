@@ -39,3 +39,19 @@ func (ud *userDomainService) FindUserByEmail(email string) (model.UserDomainInte
 
 	return userDomainRepository, nil
 }
+
+func (ud *userDomainService) findUserByEmailAndPassword(email, password string) (model.UserDomainInterface, *error_handle.ErrorHandle) {
+	logger.Info("Init findUserByEmail service", logger.AddJourneyTag(logger.FindUserByEmailJourney))
+
+	userDomainRepository, err := ud.repository.FindUserByEmail(email)
+	if err != nil {
+		if err.Code == http.StatusNotFound {
+			return nil, err
+		}
+
+		logger.Error("Error trying to call findUserByEmail repository", err, logger.AddJourneyTag(logger.FindUserByEmailJourney))
+		return nil, error_handle.NewInternalServerError(err.Error())
+	}
+
+	return userDomainRepository, nil
+}
