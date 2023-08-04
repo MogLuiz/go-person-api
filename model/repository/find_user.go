@@ -72,3 +72,35 @@ func (ur *userRepository) FindUserByID(id string) (model.UserDomainInterface, *e
 
 	return converter.ConvertEntityToDomain(userEntity), nil
 }
+
+func (ur *userRepository) FindUserByEmailAndPassword(email, password string) (model.UserDomainInterface, *error_handle.ErrorHandle) {
+	logger.Info("Init findUserByEmailAndPassword repository", logger.AddJourneyTag(logger.LoginUserJourney))
+
+	collection := ur.databaseConnection.Collection(os.Getenv(MOGODB_USER_COLLECTION))
+
+	userEntity := &entity.UserEntity{}
+
+	filter := bson.D{
+		{Key: "email", Value: email},
+		{Key: "password", Value: password},
+	}
+	err := collection.FindOne(context.Background(), filter).Decode(userEntity)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			errorMessage := "User not found with this email and password"
+			logger.Error(errorMessage, err, logger.AddJourneyTag(logger.LoginUserJourney))
+			return nil, error_handle.NewNotFoundError(errorMessage)
+		}
+
+		errorMessage := "Error trying to find user by email and password"
+		logger.Error(errorMessage, err, logger.AddJourneyTag(logger.LoginUserJourney))
+		return nil, error_handle.NewInternalServerError(errorMessage)
+	}
+
+	logger.Info("findUserByEmailAndPassword repository executed successfully",
+		logger.AddGenericTag("userID", userEntity.ID.Hex()),
+		logger.AddGenericTag("email", userEntity.Email),
+		logger.AddJourneyTag(logger.LoginUserJourney))
+
+	return converter.ConvertEntityToDomain(userEntity), nil
+}
