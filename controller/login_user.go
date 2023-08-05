@@ -25,7 +25,7 @@ func (uc *userControllerInterface) Login(c *gin.Context) {
 
 	userDomain := model.NewUserLoginDomain(userRequest.Email, userRequest.Password)
 
-	domainResult, err := uc.service.LoginUser(userDomain)
+	domainResult, token, err := uc.service.LoginUser(userDomain)
 	if err != nil {
 		logger.Error("Error trying to call loginUser service", err, logger.AddJourneyTag(logger.LoginUserJourney))
 		c.JSON(err.Code, err)
@@ -33,5 +33,7 @@ func (uc *userControllerInterface) Login(c *gin.Context) {
 	}
 
 	logger.Info("loginUser controller executed successfully", logger.AddGenericTag("userID", domainResult.GetID()), logger.AddJourneyTag(logger.LoginUserJourney))
+
+	c.Header("Authorization", token)
 	c.JSON(http.StatusOK, view.ConvertDomainToResponse(domainResult))
 }

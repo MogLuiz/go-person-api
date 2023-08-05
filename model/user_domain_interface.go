@@ -1,5 +1,7 @@
 package model
 
+import "github.com/MogLuiz/go-person-api/configuration/error_handle"
+
 type UserDomainInterface interface {
 	GetEmail() string
 	GetPassword() string
@@ -10,6 +12,7 @@ type UserDomainInterface interface {
 	SetID(string)
 
 	EncryptPassword()
+	GenerateToken() (string, *error_handle.ErrorHandle)
 }
 
 func NewUserDomain(email, password, name string, age int8) UserDomainInterface {
