@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/MogLuiz/go-person-api/configuration/error_handle"
-	"github.com/MogLuiz/go-person-api/configuration/logger"
 	"github.com/golang-jwt/jwt"
 )
 
@@ -29,10 +28,7 @@ func (ud *userDomain) GenerateToken() (string, *error_handle.ErrorHandle) {
 
 	tokenString, err := token.SignedString([]byte(secret))
 	if err != nil {
-		var errorMessage = fmt.Sprintf("Error trying to generate jwt token, err=%s", err.Error())
-
-		logger.Error(errorMessage, err, logger.AddJourneyTag(logger.LoginUserJourney))
-		return "", error_handle.NewInternalServerError(errorMessage)
+		return "", error_handle.NewInternalServerError(fmt.Sprintf("Error trying to generate jwt token, err=%s", err.Error()))
 	}
 
 	return tokenString, nil

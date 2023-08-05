@@ -6,7 +6,7 @@ import (
 	"github.com/MogLuiz/go-person-api/model"
 )
 
-func (ud *userDomainService) LoginUser(userDomain model.UserDomainInterface) (model.UserDomainInterface, *error_handle.ErrorHandle) {
+func (ud *userDomainService) LoginUser(userDomain model.UserDomainInterface) (model.UserDomainInterface, string, *error_handle.ErrorHandle) {
 	logger.Info("Init loginUser service", logger.AddJourneyTag(logger.LoginUserJourney))
 
 	userDomain.EncryptPassword()
@@ -14,9 +14,15 @@ func (ud *userDomainService) LoginUser(userDomain model.UserDomainInterface) (mo
 	user, err := ud.findUserByEmailAndPassword(userDomain.GetEmail(), userDomain.GetPassword())
 	if err != nil {
 		logger.Error("Error trying to call findUserByEmailAndPassword service", err, logger.AddJourneyTag(logger.LoginUserJourney))
-		return nil, err
+		return nil, "", err
+	}
+
+	token, err := user.GenerateToken()
+	if err != nil {
+		logger.Error(err.Message, err, logger.AddJourneyTag(logger.LoginUserJourney))
+		return nil, "", err
 	}
 
 	logger.Info("loginUser service executed successfully", logger.AddGenericTag("userID", user.GetID()), logger.AddJourneyTag(logger.LoginUserJourney))
-	return user, nil
+	return user, token, nil
 }
