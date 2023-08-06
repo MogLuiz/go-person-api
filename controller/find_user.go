@@ -15,7 +15,6 @@ func (uc *userControllerInterface) FindUserByID(c *gin.Context) {
 	logger.Info("Init FindUserByID controller", logger.AddJourneyTag(logger.FindUserByIDJourney))
 
 	userID := c.Param("userId")
-
 	if _, err := primitive.ObjectIDFromHex(userID); err != nil {
 		errorMessage := error_handle.NewBadRequestError("userId is not a valid UUID")
 		logger.Error("Error trying to validate userId", err, logger.AddJourneyTag(logger.FindUserByIDJourney))

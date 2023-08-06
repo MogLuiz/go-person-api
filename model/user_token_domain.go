@@ -2,11 +2,14 @@ package model
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/MogLuiz/go-person-api/configuration/error_handle"
+	"github.com/MogLuiz/go-person-api/configuration/logger"
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 )
 
@@ -54,9 +57,29 @@ func VerifyToken(jwtToken string) (UserDomainInterface, *error_handle.ErrorHandl
 		id:    claims["id"].(string),
 		email: claims["email"].(string),
 		name:  claims["name"].(string),
-		age:   claims["age"].(int8),
+		age:   int8(claims["age"].(float64)),
 	}, nil
 
+}
+
+func VerifyTokenMiddleware(c *gin.Context) {
+	token := RemoveBearerPrefix(c.GetHeader("Authorization"))
+	if token == "" {
+		c.JSON(http.StatusUnauthorized, error_handle.NewUnauthorizedError("missing token"))
+		c.Abort()
+		return
+	}
+
+	user, err := VerifyToken(token)
+	if err != nil {
+		c.JSON(err.Code, err)
+		c.Abort()
+		return
+	}
+
+	logger.Info(fmt.Sprintf("User authenticated %#v", user))
+
+	c.Next()
 }
 
 func RemoveBearerPrefix(token string) string {
