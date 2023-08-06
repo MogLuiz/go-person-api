@@ -67,3 +67,11 @@ func NewForbiddenError(message string) *ErrorHandle {
 		Code:    http.StatusForbidden,
 	}
 }
+
+func NewUnauthorizedError(message string) *ErrorHandle {
+	return &ErrorHandle{
+		Message: message,
+		Err:     "unauthorized",
+		Code:    http.StatusUnauthorized,
+	}
+}
