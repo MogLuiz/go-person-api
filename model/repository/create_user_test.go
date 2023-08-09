@@ -43,4 +43,18 @@ func TestUserRepository_CreateUser(t *testing.T) {
 		assert.EqualValues(t, userDomain.GetName(), domain.GetName())
 		assert.EqualValues(t, userDomain.GetAge(), domain.GetAge())
 	})
+
+	mtestDB.Run("it should returns error when is sended a invalid domain", func(mt *mtest.T) {
+		mt.AddMockResponses(bson.D{
+			{Key: "ok", Value: 0},
+		})
+		databaseMock := mt.Client.Database(database_name)
+
+		repository := NewUserRepository(databaseMock)
+		domain := model.NewUserDomain("test@test.com", "test", "test", 90)
+		userDomain, err := repository.CreateUser(domain)
+
+		assert.NotNil(t, err)
+		assert.Nil(t, userDomain)
+	})
 }
