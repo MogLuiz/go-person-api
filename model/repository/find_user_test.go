@@ -214,7 +214,7 @@ func TestUserRepository_FindUserByEmailAndPassword(t *testing.T) {
 		assert.Nil(t, userDomain)
 	})
 
-	mtestDB.Run("it should returns user not found error", func(mt *mtest.T) {
+	mtestDB.Run("it should returns forbidden error", func(mt *mtest.T) {
 		const testEmail = "test@teste.com"
 		const testPassword = "test"
 
@@ -231,6 +231,7 @@ func TestUserRepository_FindUserByEmailAndPassword(t *testing.T) {
 		assert.NotNil(t, err)
 		assert.Nil(t, userDomain)
 
+		assert.EqualValues(t, err.Code, http.StatusForbidden)
 		assert.EqualValues(t, err.Message, "User or password is invalid")
 	})
 }
