@@ -126,6 +126,39 @@ func TestUserRepository_FindUserByID(t *testing.T) {
 		assert.EqualValues(t, userDomain.GetAge(), userEntity.Age)
 	})
 
+	mtestDB.Run("it should throws error when mongodb returns error", func(mt *mtest.T) {
+		mt.AddMockResponses(bson.D{
+			{Key: "ok", Value: 0},
+		})
+
+		databaseMock := mt.Client.Database(database_name)
+
+		repository := NewUserRepository(databaseMock)
+		userDomain, err := repository.FindUserByID("3")
+
+		assert.NotNil(t, err)
+		assert.Nil(t, userDomain)
+	})
+
+	mtestDB.Run("it should returns user not found error", func(mt *mtest.T) {
+		const testID = "invalid_ID"
+
+		mt.AddMockResponses(mtest.CreateCursorResponse(
+			0,
+			fmt.Sprintf("%s.%s", database_name, collection_name),
+			mtest.FirstBatch))
+
+		databaseMock := mt.Client.Database(database_name)
+
+		repository := NewUserRepository(databaseMock)
+		userDomain, err := repository.FindUserByID(testID)
+
+		assert.NotNil(t, err)
+		assert.Nil(t, userDomain)
+
+		assert.EqualValues(t, err.Code, http.StatusNotFound)
+		assert.EqualValues(t, err.Message, fmt.Sprintf("User with ID %s not found", testID))
+	})
 }
 
 func convertEntityToBsonD(entity entity.UserEntity) bson.D {
