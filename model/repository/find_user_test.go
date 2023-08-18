@@ -161,6 +161,80 @@ func TestUserRepository_FindUserByID(t *testing.T) {
 	})
 }
 
+func TestUserRepository_FindUserByEmailAndPassword(t *testing.T) {
+	database_name := "user_database_test"
+	collection_name := "user_collection_test"
+
+	os.Setenv("MONGODB_USER_DB", collection_name)
+	defer os.Clearenv()
+
+	mtestDB := mtest.New(t, mtest.NewOptions().ClientType(mtest.Mock))
+	defer mtestDB.Close()
+
+	mtestDB.Run("it should returns success when is sended a valid email and password", func(mt *mtest.T) {
+		userEntity := entity.UserEntity{
+			ID:       primitive.NewObjectID(),
+			Email:    "test@test.com",
+			Password: "test",
+			Name:     "test",
+			Age:      50,
+		}
+
+		mt.AddMockResponses(mtest.CreateCursorResponse(
+			1,
+			fmt.Sprintf("%s.%s", database_name, collection_name),
+			mtest.FirstBatch,
+			convertEntityToBsonD(userEntity)))
+
+		databaseMock := mt.Client.Database(database_name)
+
+		repository := NewUserRepository(databaseMock)
+		userDomain, err := repository.FindUserByEmailAndPassword(userEntity.Email, userEntity.Password)
+
+		assert.Nil(t, err)
+
+		assert.EqualValues(t, userDomain.GetID(), userEntity.ID.Hex())
+		assert.EqualValues(t, userDomain.GetEmail(), userEntity.Email)
+		assert.EqualValues(t, userDomain.GetPassword(), userEntity.Password)
+		assert.EqualValues(t, userDomain.GetName(), userEntity.Name)
+		assert.EqualValues(t, userDomain.GetAge(), userEntity.Age)
+	})
+
+	mtestDB.Run("it should throws error when mongodb returns error", func(mt *mtest.T) {
+		mt.AddMockResponses(bson.D{
+			{Key: "ok", Value: 0},
+		})
+
+		databaseMock := mt.Client.Database(database_name)
+
+		repository := NewUserRepository(databaseMock)
+		userDomain, err := repository.FindUserByEmailAndPassword("test", "test")
+
+		assert.NotNil(t, err)
+		assert.Nil(t, userDomain)
+	})
+
+	mtestDB.Run("it should returns user not found error", func(mt *mtest.T) {
+		const testEmail = "test@teste.com"
+		const testPassword = "test"
+
+		mt.AddMockResponses(mtest.CreateCursorResponse(
+			0,
+			fmt.Sprintf("%s.%s", database_name, collection_name),
+			mtest.FirstBatch))
+
+		databaseMock := mt.Client.Database(database_name)
+
+		repository := NewUserRepository(databaseMock)
+		userDomain, err := repository.FindUserByEmailAndPassword(testEmail, testPassword)
+
+		assert.NotNil(t, err)
+		assert.Nil(t, userDomain)
+
+		assert.EqualValues(t, err.Message, "User or password is invalid")
+	})
+}
+
 func convertEntityToBsonD(entity entity.UserEntity) bson.D {
 	return bson.D{
 		{Key: "_id", Value: entity.ID},
