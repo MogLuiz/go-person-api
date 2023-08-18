@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"testing"
 
@@ -63,6 +64,26 @@ func TestUserRepository_FindUserByEmail(t *testing.T) {
 
 		assert.NotNil(t, err)
 		assert.Nil(t, userDomain)
+	})
+
+	mtestDB.Run("it should returns user not found error", func(mt *mtest.T) {
+		const testEmail = "test@teste.com"
+
+		mt.AddMockResponses(mtest.CreateCursorResponse(
+			0,
+			fmt.Sprintf("%s.%s", database_name, collection_name),
+			mtest.FirstBatch))
+
+		databaseMock := mt.Client.Database(database_name)
+
+		repository := NewUserRepository(databaseMock)
+		userDomain, err := repository.FindUserByEmail(testEmail)
+
+		assert.NotNil(t, err)
+		assert.Nil(t, userDomain)
+
+		assert.EqualValues(t, err.Code, http.StatusNotFound)
+		assert.EqualValues(t, err.Message, fmt.Sprintf("User with email %s not found", testEmail))
 	})
 }
 
