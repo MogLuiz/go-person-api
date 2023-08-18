@@ -50,6 +50,20 @@ func TestUserRepository_FindUserByEmail(t *testing.T) {
 		assert.EqualValues(t, userDomain.GetName(), userEntity.Name)
 		assert.EqualValues(t, userDomain.GetAge(), userEntity.Age)
 	})
+
+	mtestDB.Run("it should throws error when mongodb returns error", func(mt *mtest.T) {
+		mt.AddMockResponses(bson.D{
+			{Key: "ok", Value: 0},
+		})
+
+		databaseMock := mt.Client.Database(database_name)
+
+		repository := NewUserRepository(databaseMock)
+		userDomain, err := repository.FindUserByEmail("test")
+
+		assert.NotNil(t, err)
+		assert.Nil(t, userDomain)
+	})
 }
 
 func convertEntityToBsonD(entity entity.UserEntity) bson.D {

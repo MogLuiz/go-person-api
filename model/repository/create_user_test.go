@@ -44,7 +44,7 @@ func TestUserRepository_CreateUser(t *testing.T) {
 		assert.EqualValues(t, userDomain.GetAge(), domain.GetAge())
 	})
 
-	mtestDB.Run("it should returns error when is sended a invalid domain", func(mt *mtest.T) {
+	mtestDB.Run("it should returns error when is sended an invalid domain", func(mt *mtest.T) {
 		mt.AddMockResponses(bson.D{
 			{Key: "ok", Value: 0},
 		})
