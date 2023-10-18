@@ -16,7 +16,6 @@ func (ud *userDomainService) FindUserByEmail(email string) (model.UserDomainInte
 	logger.Info("Init findUserByEmail service", logger.AddJourneyTag(logger.FindUserByEmailJourney))
 
 	return ud.repository.FindUserByEmail(email)
-
 }
 
 func (ud *userDomainService) findUserByEmailAndPassword(email, password string) (model.UserDomainInterface, *error_handle.ErrorHandle) {
