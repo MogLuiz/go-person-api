@@ -21,6 +21,7 @@ func TestUserDomainService_FindUserByIDService(t *testing.T) {
 	t.Run("it should return success when exists user", func(t *testing.T) {
 		id := primitive.NewObjectID().Hex()
 		userDomain := model.NewUserDomain("test@test.com", "123", "john doe", 21)
+		userDomain.SetID(id)
 
 		repository.EXPECT().FindUserByID(id).Return(userDomain, nil)
 
@@ -36,6 +37,41 @@ func TestUserDomainService_FindUserByIDService(t *testing.T) {
 		repository.EXPECT().FindUserByID(id).Return(nil, error_handle.NewNotFoundError("user not found"))
 
 		returnedUser, err := service.FindUserByID(id)
+
+		assert.Nil(t, returnedUser)
+		assert.NotNil(t, err)
+		assert.Equal(t, err.Message, "user not found")
+	})
+}
+
+func TestUserDomainService_FindUserByEmailService(t *testing.T) {
+	control := gomock.NewController(t)
+	defer control.Finish()
+
+	repository := mocks.NewMockUserRepository(control)
+	service := NewUserDomainService(repository)
+
+	t.Run("it should return success when exists user", func(t *testing.T) {
+		id := primitive.NewObjectID().Hex()
+		email := "test@success.com"
+
+		userDomain := model.NewUserDomain(email, "123", "john doe", 21)
+		userDomain.SetID(id)
+
+		repository.EXPECT().FindUserByEmail(email).Return(userDomain, nil)
+
+		returnedUser, err := service.FindUserByEmail(email)
+
+		assert.Nil(t, err)
+		assert.Equal(t, userDomain, returnedUser)
+	})
+
+	t.Run("it should return error when not exists user", func(t *testing.T) {
+		email := "test@failure.com"
+
+		repository.EXPECT().FindUserByEmail(email).Return(nil, error_handle.NewNotFoundError("user not found"))
+
+		returnedUser, err := service.FindUserByEmail(email)
 
 		assert.Nil(t, returnedUser)
 		assert.NotNil(t, err)
