@@ -3,6 +3,7 @@ package services
 import (
 	"testing"
 
+	"github.com/MogLuiz/go-person-api/configuration/error_handle"
 	"github.com/MogLuiz/go-person-api/model"
 	"github.com/MogLuiz/go-person-api/test/mocks"
 	"github.com/stretchr/testify/assert"
@@ -29,4 +30,15 @@ func TestUserDomainService_FindUserByIDService(t *testing.T) {
 		assert.Equal(t, userDomain, returnedUser)
 	})
 
+	t.Run("it should return error when not exists user", func(t *testing.T) {
+		id := primitive.NewObjectID().Hex()
+
+		repository.EXPECT().FindUserByID(id).Return(nil, error_handle.NewNotFoundError("user not found"))
+
+		returnedUser, err := service.FindUserByID(id)
+
+		assert.Nil(t, returnedUser)
+		assert.NotNil(t, err)
+		assert.Equal(t, err.Message, "user not found")
+	})
 }
